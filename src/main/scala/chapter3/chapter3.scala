@@ -1,3 +1,5 @@
+package chapter3
+
 
 
 sealed trait List[+A]
@@ -75,6 +77,18 @@ object List {
     case cons(head, tail) => cons(head, init(tail))
   }
 
+  //example : listing 3.3 page 49
+  def foldRight[A, B](l: List[A], z: B)(f: (A, B) => B): B =
+    l match {
+      case Nil => z
+      case cons(x, xs) => f(x, foldRight(xs, z)(f))
+    }
+
+  def sum2(l: List[Int]) =
+    foldRight(l, 0)((x, y) => x + y)
+
+  def product2(l: List[Double]) =
+    foldRight(l, 1.0)(_ * _)
 
 
 }
