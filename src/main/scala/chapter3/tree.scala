@@ -14,8 +14,8 @@ object Tree {
       t match {
         case Branch(_: Leaf[A], right: Tree[A]) => innerSize(right, acc + 1 + 1)
         case Branch(left: Tree[A], _: Leaf[A]) => innerSize(left, acc + 1 + 1)
-        case Branch(_: Leaf[A], _: Leaf[A]) => acc + 1 + 2
         case Branch(left: Tree[A], right: Tree[A]) => innerSize(left, innerSize(right, acc) + acc + 1)
+        case Branch(_: Leaf[A], _: Leaf[A]) => acc + 1 + 2
         case _ => acc
       }
     }

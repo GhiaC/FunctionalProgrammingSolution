@@ -1,5 +1,6 @@
 package chapter3
 
+import scala.annotation.tailrec
 
 
 sealed trait List[+A]
@@ -17,10 +18,10 @@ object List {
 
   //exercise 2
   def tail[A](list: List[A]): List[A] = {
-    //    list match {
-    case cons(_, tail) => tail
-    case Nil => Nil
-    //    }
+    list match {
+      case cons(_, tail) => tail
+      case Nil => Nil
+    }
   }
 
   //exercise 3
@@ -29,6 +30,7 @@ object List {
   }
 
   //exercise 4
+  @tailrec
   def drop[A](l: List[A], n: Int): List[A] = {
     (l, n) match {
       case (list, 0) => list
@@ -51,17 +53,17 @@ object List {
   // my exercise
   def holdWhile[A](l: List[A], f: A => Boolean): List[A] = {
     l match {
-      case cons(head, tail) if f(head) => cons(head, dropWhile(tail, f))
-      case cons(head, _) if !f(head) => cons(head, Nil)
+      case cons(head, tail) if f(head) => cons(head, holdWhile(tail, f))
+      case cons(head, tail) if !f(head) => holdWhile(tail, f)
     }
   }
 
   //example
-  def dropWhile[A](l: List[A])(f: A => Boolean): List[A] =
-    l match {
-      case cons(h, t) if f(h) => dropWhile(t)(f)
-      case _ => l
-    }
+//  def dropWhile[A](l: List[A])(f: A => Boolean): List[A] =
+//    l match {
+//      case cons(h, t) if f(h) => dropWhile(t)(f)
+//      case _ => l
+//    }
 
   //surprisingly function
   def append[A](list1: List[A], list2: List[A]): List[A] = {
@@ -71,10 +73,13 @@ object List {
     }
   }
 
+
   //exercise 6
   def init[A](l: List[A]): List[A] = {
-    case cons(head, cons(_, Nil)) => head
-    case cons(head, tail) => cons(head, init(tail))
+    l match {
+      case cons(head, cons(_, Nil)) => cons(head,Nil)
+      case cons(head, tail) => cons(head, init(tail))
+    }
   }
 
   //example : listing 3.3 page 49
